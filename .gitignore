@@ -1,0 +1,6 @@
+# Homelab infra
+proxy-network/
+*.log
+.env
+.env.local
+.DS_Store
