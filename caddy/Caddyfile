@@ -1,0 +1,13 @@
+:80 {
+    handle_path /tutor* {
+        reverse_proxy localhost:8001
+    }
+
+    handle /trip/* {
+        uri strip_prefix /trip
+        root * /var/www/nagoya-travel
+        file_server
+    }
+
+    respond "Caddy is working on catcatz.cc"
+}

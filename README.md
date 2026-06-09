@@ -1,39 +1,52 @@
 # homelab
 
-> Unified self-hosted apps pipeline for `catcatz.cc` — single Cloudflare Tunnel + Traefik reverse proxy + Docker. No more re-creating quick tunnels, no more per-app DNS, no more port forwarding.
+> Unified self-hosted apps for `catcatz.cc` — single Cloudflare Tunnel + Caddy reverse proxy. Clean subfolder routing (`/tutor/`, `/trip/`, etc.).
 
-**Status:** 📋 Spec phase. See [SPEC.md](./SPEC.md) for full plan and approval gate.
+**Status:** ✅ Production
 
-## TL;DR
-
-This repo will hold the Docker Compose stacks, Traefik config, and documentation for hosting all your self-hosted apps behind one stable `*.catcatz.cc` domain.
+## Architecture
 
 ```
-Internet → Cloudflare (wildcard *.catcatz.cc) → cloudflared → Traefik → Docker apps
+Internet → Cloudflare Tunnel → Caddy (:80) → Apps
+                (catcatz.cc)          /tutor/ → ai-english-tutor (8001)
+                                      /trip/  → nagoya-travel (static)
 ```
 
-## What's Inside (Target)
+## What's Inside
 
-- `stacks/traefik/` — Traefik v3 + Portainer (control plane)
-- `stacks/tutor/` — ai-english-tutor
-- `stacks/trip/` — trip server
-- `stacks/example-app/` — template for new apps
-- `docs/` — onboarding, migration, troubleshooting
+- `caddy/Caddyfile` — Main Caddy configuration (subfolder routing)
+- `cloudflared/cloudflared.service` — Systemd service for Cloudflare Tunnel
+- `SPEC.md` — Original planning document
 
-## Current Status
+## Current Apps
 
-- [x] Repo created: https://github.com/catcatz/homelab
-- [x] `SPEC.md` written, awaiting approval
-- [ ] Docker installed on host
-- [ ] Traefik stack deployed
-- [ ] Cloudflare named tunnel configured
-- [ ] ai-english-tutor migrated to Docker
-- [ ] trip server migrated to Docker
-- [ ] Documentation complete
+| Path | App | Port | Type |
+|------|-----|------|------|
+| `/tutor/` | ai-english-tutor | 8001 | FastAPI backend |
+| `/trip/` | nagoya-travel | static | HTML/JS frontend |
 
-## Quick Reference
+## Quick Commands
 
-- **Spec:** [SPEC.md](./SPEC.md)
-- **Inspiration:** [fire3san/homelabpipeline](https://github.com/fire3san/homelabpipeline) (we're using a simpler single-host variant)
-- **Cloudflare dashboard:** https://one.dash.cloudflare.com/
-- **Domain:** `catcatz.cc` (already on Cloudflare)
+```bash
+# Restart Caddy
+sudo systemctl restart caddy
+
+# Restart Cloudflare Tunnel
+sudo systemctl restart cloudflared
+
+# View logs
+sudo journalctl -u caddy -f
+sudo journalctl -u cloudflared -f
+```
+
+## DNS / Tunnel
+
+- Tunnel name: `homelab`
+- Public hostname: `catcatz.cc` → `http://localhost:80`
+- All subfolder routing handled by Caddy
+
+## Notes
+
+- Switched from Traefik to Caddy for simpler subfolder routing
+- No Docker needed for current apps (Caddy serves static + reverse proxy)
+- Future apps can be added easily under new paths in Caddyfile

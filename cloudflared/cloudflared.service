@@ -1,0 +1,13 @@
+[Unit]
+Description=Cloudflare Tunnel
+After=network.target
+
+[Service]
+Type=simple
+User=catcatz
+ExecStart=/home/catcatz/.local/bin/cloudflared tunnel run --token eyJhIjoiMjFlYzRmZjExOGFhNDkwYzUzZGJmZDg1NTBmZmJkNTgiLCJ0IjoiNTcwMTcwYzAtYzVmNi00NTAzLTk0OGEtNWY0YjYzMGNiMDhkIiwicyI6Ik5tWXdPR0k1TW1ZdE1ERTBZUzAwWlRBMUxUa3pOREF0T1RRNE1tTXhOakEyWXpOaSJ9
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
