@@ -9,5 +9,14 @@
         file_server
     }
 
+    handle_path /cantalk* {
+        root * /var/www/cantalk
+        file_server
+    }
+
+    handle /cantalk/ws* {
+        reverse_proxy 192.168.1.59:8765
+    }
+
     respond "Caddy is working on catcatz.cc"
 }
