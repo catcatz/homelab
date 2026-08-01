@@ -10,6 +10,7 @@
 Internet → Cloudflare Tunnel → Caddy (:80) → Apps
                 (catcatz.cc)          /tutor/ → ai-english-tutor (8001)
                                       /trip/  → nagoya-travel (static)
+                                      /cantalk/ → cantalk (static) + WS → Mac (8765)
 ```
 
 ## What's Inside
@@ -24,6 +25,7 @@ Internet → Cloudflare Tunnel → Caddy (:80) → Apps
 |------|-----|------|------|
 | `/tutor/` | ai-english-tutor | 8001 | FastAPI backend |
 | `/trip/` | nagoya-travel | static | HTML/JS frontend |
+| `/cantalk/` | cantalk — 廣東話 Voice Agent | 8765 (Mac) | WebSocket + static |
 
 ## Quick Commands
 
