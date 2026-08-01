@@ -9,7 +9,7 @@
         file_server
     }
 
-    handle /cantalk/ws* {
+    handle_path /cantalk/ws* {
         reverse_proxy 192.168.1.59:8765
     }
 
